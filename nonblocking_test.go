@@ -42,7 +42,6 @@ func TestNonblockingMandatory(t *testing.T) {
 
 	i <- "test3"
 	close(i)
-	time.Sleep(100 * time.Millisecond)
 
 	if v, ok := <-o; !ok || v != "test3" {
 		t.Fatal(v, ok)
