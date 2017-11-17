@@ -5,9 +5,9 @@ import (
 )
 
 // Nonblocking makes input/output channels.
-// If mandatory flag is false, output channel will close as soon as after closing input channel evenif unread messages exists.
-// otherwise, all messages will send to output channel after closing input channel.
-func Nonblocking(mandatory bool) (<-chan interface{}, chan<- interface{}) {
+// If promise flag is false, output channel will close as soon as after closing input channel evenif unread messages exists.
+// otherwise, all messages will send to output channel after closing input channel, but needs to read all messages for terminate inner goroutin.
+func Nonblocking(promise bool) (<-chan interface{}, chan<- interface{}) {
 	type closed struct{}
 
 	output := make(chan interface{})
@@ -25,7 +25,7 @@ func Nonblocking(mandatory bool) (<-chan interface{}, chan<- interface{}) {
 			select {
 			case msg, ok := <-recv:
 				if !ok {
-					if !mandatory {
+					if !promise {
 						return
 					}
 					recv = nil

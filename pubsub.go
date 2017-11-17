@@ -21,8 +21,9 @@ type subscribe struct {
 }
 
 // Subscribe makes new subscriber of PubSub.
-func (s Hub) Subscribe(mandatory bool) (<-chan interface{}, func()) {
-	out, in := Nonblocking(mandatory)
+// subscriber channel is Nonblocking one, promise flag is same as Nonblocking parameter.
+func (s Hub) Subscribe(promise bool) (<-chan interface{}, func()) {
+	out, in := Nonblocking(promise)
 	closer := makeonce(func() {
 		close(in)
 	})
